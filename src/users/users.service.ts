@@ -2,10 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './interfaces/users.interface';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 // import { users } from 'src/mock_data/users_default_data';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
   private users: Users[] = [
     {
       id: 1,
@@ -26,23 +32,32 @@ export class UsersService {
       email: 'dicken2033@gmail.com',
     },
   ];
-  create(createUserDto: CreateUserDto) {
-    this.users.push(createUserDto);
+  createUser(createUserDto: CreateUserDto) {
+    const user: User = new User();
+    user.name = createUserDto.name;
+    user.age = createUserDto.age;
+    user.email = createUserDto.email;
+    return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.users;
+  findAllUsers() {
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return this.users.find((user) => user.id === id);
+  findOneUser(id: number): Promise<User> {
+    return this.userRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user: User = new User();
+    user.name = updateUserDto.name;
+    user.age = updateUserDto.age;
+    user.email = updateUserDto.email;
+    user.id = id;
+    return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  removeUser(id: number): Promise<{ affected?: number }> {
+    return this.userRepository.delete(id);
   }
 }
