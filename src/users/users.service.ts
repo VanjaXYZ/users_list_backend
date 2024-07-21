@@ -20,16 +20,16 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findOneUser(id: number): Promise<User> {
+  async findOneUser(id: string): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.userRepository.update(id, updateUserDto);
     return this.findOneUser(id);
   }
 
-  removeUser(id: number): Promise<{ affected?: number }> {
+  removeUser(id: string): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
   }
 }
