@@ -12,10 +12,7 @@ export class UsersService {
   ) {}
 
   createUser(createUserDto: CreateUserDto) {
-    const user: User = new User();
-    user.name = createUserDto.name;
-    user.age = createUserDto.age;
-    user.email = createUserDto.email;
+    const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
 
@@ -27,13 +24,9 @@ export class UsersService {
     return this.userRepository.findOneBy({ id });
   }
 
-  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user: User = new User();
-    user.name = updateUserDto.name;
-    user.age = updateUserDto.age;
-    user.email = updateUserDto.email;
-    user.id = id;
-    return this.userRepository.save(user);
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    await this.userRepository.update(id, updateUserDto);
+    return this.findOneUser(id);
   }
 
   removeUser(id: number): Promise<{ affected?: number }> {
