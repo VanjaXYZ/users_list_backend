@@ -44,14 +44,14 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.usersService.findOneUser(+id);
+    return this.usersService.findOneUser(id);
   }
 
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
-      const data = await this.usersService.updateUser(+id, updateUserDto);
+      const data = await this.usersService.updateUser(id, updateUserDto);
       return {
         success: true,
         data,
@@ -69,7 +69,7 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      const result = await this.usersService.removeUser(+id);
+      const result = await this.usersService.removeUser(id);
       return {
         success: result.affected > 0,
         message:
