@@ -32,4 +32,7 @@ export class CreateUserDto {
 
   @IsOptional()
   hobbies?: string[];
+
+  @IsNotEmpty()
+  role: string;
 }

@@ -22,4 +22,7 @@ export class User {
 
   @Column({ type: 'varchar' })
   hobbies?: string[];
+
+  @Column({ type: 'varchar' })
+  role: string;
 }
