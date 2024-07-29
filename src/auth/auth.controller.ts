@@ -19,10 +19,8 @@ export class AuthController {
   }
 
   @Get('user')
-  @UseGuards(JwtAuthGuard) // in order to get data bearer token must be presented in headers (this can be used on every route) === authorization
+  @UseGuards(JwtAuthGuard) // in order to get data, bearer token must be presented in headers (this can be used on every route) === authorization
   user(@Req() req: Request) {
-    console.log('Inside auth controller status method');
-    console.log(req.user);
     return req.user;
   }
 }
