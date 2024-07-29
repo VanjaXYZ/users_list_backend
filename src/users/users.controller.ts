@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -20,7 +22,6 @@ export class UsersController {
   @Post()
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto) {
-    console.log('Received data:', createUserDto); // Dodaj ovaj log
     try {
       const data = await this.usersService.createUser(createUserDto);
       return {
@@ -29,22 +30,39 @@ export class UsersController {
         message: 'User Created Successfully',
       };
     } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        message: error.message || 'Failed to create user',
-      };
+      // return {
+      //   success: false,
+      //   message: error.message || 'Failed to create user',
+      // };
+      throw new HttpException(
+        'Failed to create user',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 
   @Get()
   async findAll() {
-    return this.usersService.findAllUsers();
+    try {
+      return await this.usersService.findAllUsers();
+    } catch (error) {
+      throw new HttpException(
+        'Failed to fetch users',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.usersService.findOneUser(id);
+    try {
+      return await this.usersService.findOneUser(id);
+    } catch (error) {
+      throw new HttpException(
+        'Failed to fetch user',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   @Patch(':id')
@@ -58,11 +76,15 @@ export class UsersController {
         message: 'User Updated Successfully',
       };
     } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        message: error.message || 'Failed to update user',
-      };
+      // console.error(error);
+      // return {
+      //   success: false,
+      //   message: error.message || 'Failed to update user',
+      // };
+      throw new HttpException(
+        'Failed to update user',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 
@@ -76,11 +98,15 @@ export class UsersController {
           result.affected > 0 ? 'User Deleted Successfully' : 'User Not Found',
       };
     } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        message: error.message || 'Failed to delete user',
-      };
+      // console.error(error);
+      // return {
+      //   success: false,
+      //   message: error.message || 'Failed to delete user',
+      // };
+      throw new HttpException(
+        'Failed to delete user',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 }
